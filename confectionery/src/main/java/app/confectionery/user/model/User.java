@@ -1,47 +1,49 @@
 package app.confectionery.user.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
-    @NotBlank(message = "Username is required.")
-    @Size(min = 4, max = 50)
-    private String username;
-    @NotBlank(message = "First name is required.")
+    @Column(name = "id_user")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_role", nullable = false)
+    private Role role;
+
+    @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
-    @NotBlank(message = "Last name is required.")
+
+    @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
-    @NotBlank(message = "Password is required.")
-    @Size(min = 8, max = 100, message = "Password must contain at least 8 characters.")
-    private String password;    //add password hashing
-    @NotBlank(message = "Email is required.")
-    @Email(message = "Invalid email address format.")
+
+    @Column(name = "password", nullable = false, length = 100)
+    private String password;
+
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
-    @Pattern(regexp = "^\\+?[0-9. ()-]{10,25}$", message = "Invalid phone number")
+
+    @Column(name = "phone_number", length = 12)
     private String phoneNumber;
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
 
-    public int getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public Role getRole() {
+        return role;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getFirstName() {
@@ -83,13 +85,4 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
-
 }

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: confectionery
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/confectionery_db
+    username: root
+    password: maksio1234
+    driver-class-name: com.mysql.cj.jdbc.Driver

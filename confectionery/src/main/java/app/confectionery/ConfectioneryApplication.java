@@ -11,20 +11,19 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 @SpringBootApplication
 public class ConfectioneryApplication implements RepositoryRestConfigurer {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ConfectioneryApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ConfectioneryApplication.class, args);
+    }
 
-	@Override
-	public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
-		validatingListener.addValidator("beforeCreate",validator());
-		validatingListener.addValidator("beforeSave",validator());
+    @Override
+    public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
+        validatingListener.addValidator("beforeCreate", validator());
+        validatingListener.addValidator("beforeSave", validator());
+    }
 
-	}
-
-	@Bean
-	Validator validator() {
-		return new LocalValidatorFactoryBean();
-	}
+    @Bean
+    Validator validator() {
+        return new LocalValidatorFactoryBean();
+    }
 
 }
