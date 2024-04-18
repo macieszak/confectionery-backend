@@ -1,32 +1,44 @@
 package app.confectionery.user.model;
 
-import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-@Entity
-@Table(name = "role")
-public class Role {
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_role")
-    private Long id;
+import static app.confectionery.user.model.Permission.*;
 
-    @Column(name = "name", nullable = false, length = 20)
-    private String name;
 
-    public Long getId() {
-        return id;
-    }
+@Getter
+@RequiredArgsConstructor
+public enum Role {
+    ADMIN(
+            Set.of(
+                    ADMIN_READ,
+                    ADMIN_CREATE,
+                    MEMBER_READ,
+                    MEMBER_CREATE
+            )
+    ),
+    MEMBER(
+            Set.of(
+                    MEMBER_READ,
+                    MEMBER_CREATE
+            )
+    )
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    ;
 
-    public String getName() {
-        return name;
-    }
+    private final Set<Permission> permissions;
 
-    public void setName(String name) {
-        this.name = name;
+    public List<SimpleGrantedAuthority> getAuthorities() {
+        var authorities = getPermissions()
+                .stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getPermission()))
+                .collect(Collectors.toList());
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        return authorities;
     }
 }

@@ -10,3 +10,6 @@ spring:
     username: root
     password: maksio1234
     driver-class-name: com.mysql.cj.jdbc.Driver
+logging:
+  level:
+    org.springframework.security: TRACE

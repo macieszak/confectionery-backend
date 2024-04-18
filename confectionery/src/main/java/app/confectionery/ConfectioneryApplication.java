@@ -15,15 +15,4 @@ public class ConfectioneryApplication implements RepositoryRestConfigurer {
         SpringApplication.run(ConfectioneryApplication.class, args);
     }
 
-    @Override
-    public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
-        validatingListener.addValidator("beforeCreate", validator());
-        validatingListener.addValidator("beforeSave", validator());
-    }
-
-    @Bean
-    Validator validator() {
-        return new LocalValidatorFactoryBean();
-    }
-
 }
