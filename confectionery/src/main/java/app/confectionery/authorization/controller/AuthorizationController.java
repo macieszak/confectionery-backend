@@ -3,6 +3,7 @@ package app.confectionery.authorization.controller;
 import app.confectionery.authorization.model.request.AuthenticationRequest;
 import app.confectionery.authorization.model.response.AuthenticationResponse;
 import app.confectionery.authorization.service.AuthorizationService;
+import app.confectionery.authorization.service.AuthorizationServiceImpl;
 import app.confectionery.authorization.model.request.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

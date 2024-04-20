@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @Entity
 @Table(name = "user")
@@ -19,8 +20,8 @@ import java.util.Collection;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     private String firstName;
 
@@ -30,8 +31,8 @@ public class User implements UserDetails {
 
     private String password;
 
-//    @Column(nullable = true)
-//    private String phoneNumber;     //different between tutorial
+    @Column(nullable = true)
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Role role;
