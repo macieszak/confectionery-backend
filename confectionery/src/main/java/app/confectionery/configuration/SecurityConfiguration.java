@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -45,6 +46,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("api/auth/*")
                                 .permitAll()
                                 .requestMatchers("/api/user/*").hasAnyRole(ADMIN.name(), MEMBER.name())
+                                .requestMatchers("/api/addresses/*").hasAnyRole(ADMIN.name(), MEMBER.name())
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
