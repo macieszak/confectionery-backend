@@ -10,7 +10,11 @@ spring:
     username: root
     password: maksio1234
     driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 128MB
+      max-request-size: 128MB
+      enabled: true
 logging:
   level:
     org.springframework.security: TRACE
-
