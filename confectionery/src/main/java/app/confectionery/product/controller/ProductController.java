@@ -64,12 +64,21 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/{fileName}")
+    @GetMapping("img/{fileName}")
     public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
         byte[] imageData = storageService.downloadImageFromFileSystem(fileName);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
                 .body(imageData);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        return productService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
 
 }
