@@ -7,6 +7,8 @@ import app.confectionery.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -23,6 +25,11 @@ public class ProductServiceImpl implements ProductService {
                 .image(fileData)
                 .build();
         return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> findAllProducts() {
+        return productRepository.findAll();
     }
 
 }

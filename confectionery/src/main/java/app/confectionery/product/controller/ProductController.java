@@ -5,7 +5,12 @@ import app.confectionery.product.model.Product;
 import app.confectionery.product.model.ProductRequestDTO;
 import app.confectionery.product.service.ProductService;
 import app.confectionery.product.service.StorageService;
+import app.confectionery.product.service.StorageServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +42,7 @@ public class ProductController {
         if (description == null || description.trim().isEmpty()) errors.add("Description cannot be empty");
         if (image == null || image.isEmpty()) errors.add("Image cannot be null");
 
+
         if (!errors.isEmpty()) {
             return ResponseEntity.badRequest().body(String.join(", ", errors));
         }
@@ -50,6 +56,20 @@ public class ProductController {
             throw new RuntimeException("Failure in image upload", e);
         }
         return ResponseEntity.ok(newProduct);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.findAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/{fileName}")
+    public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
+        byte[] imageData = storageService.downloadImageFromFileSystem(fileName);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(imageData);
     }
 
 }

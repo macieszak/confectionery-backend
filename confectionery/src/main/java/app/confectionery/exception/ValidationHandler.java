@@ -66,6 +66,11 @@ public class ValidationHandler {
         return ResponseEntity.status(status).body(new ErrorResponse(status.value(), ex.getMessage()));
     }
 
+    @ExceptionHandler(FileAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleFileAlreadyExistsException(FileAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage()));
+    }
+
 
     @Data
     @Builder

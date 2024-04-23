@@ -30,4 +30,7 @@ public class Product {
     @JoinColumn(name = "file_data_id", referencedColumnName = "id")
     private FileData image;
 
+    @Transient
+    private String imagePath;
+
 }
