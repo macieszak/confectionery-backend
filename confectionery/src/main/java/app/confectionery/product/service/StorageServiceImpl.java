@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StorageServiceImpl implements StorageService {
 
-    private final String FOLDER_PATH = "/Users/maciejmaksymiuk/confectionery project/confectionery_web_app_backend/confectionery/src/main/resources/static/";
+    private final String FOLDER_PATH = "/Users/maciejmaksymiuk/confectionery project/confectionery_web_app_backend/confectionery/src/main/resources/static/product_images/";
 
     private final FileDataRepository fileDataRepository;
 
@@ -30,19 +30,33 @@ public class StorageServiceImpl implements StorageService {
 
         file.transferTo(new File(filePath));
 
-        if (fileData != null) {
-            return "file uploaded successfully : " + filePath;
-        }
-        return null;
+        return "file uploaded successfully : " + filePath;
+    }
+
+    @Override
+    public FileData uploadImageToFileSystemAndReturnFileData(MultipartFile file) throws IOException {
+        String filePath = FOLDER_PATH + file.getOriginalFilename();
+
+        FileData fileData = fileDataRepository.save(FileData.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .filePath(filePath).build());
+
+        file.transferTo(new File(filePath));
+
+        return fileData;
     }
 
     @Override
     public byte[] downloadImageFromFileSystem(String fileName) throws IOException {
         Optional<FileData> fileData = fileDataRepository.findByName(fileName);
-        String filePath = fileData.get().getFilePath();
-        byte[] images = Files.readAllBytes(new File(filePath).toPath());
-        return images;
-    }
+        String filePath = "";
+        if (fileData.isPresent()) {
+            filePath = fileData.get().getFilePath();
+        }
 
+        return Files.readAllBytes(
+                new File(filePath).toPath());
+    }
 
 }

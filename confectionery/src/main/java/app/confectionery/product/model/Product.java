@@ -7,12 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "file_data")
+@Table(name = "product")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class FileData {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +20,14 @@ public class FileData {
 
     private String name;
 
-    private String type;
+    private String category;
 
-    private String filePath;
+    private double price;
+
+    private String description;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_data_id", referencedColumnName = "id")
+    private FileData image;
 
 }
