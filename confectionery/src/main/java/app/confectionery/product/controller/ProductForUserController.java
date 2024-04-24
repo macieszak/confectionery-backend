@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,6 +40,29 @@ public class ProductForUserController {
         return productService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/sorted")
+    public ResponseEntity<List<Product>> getProductsSorted(@RequestParam(required = false) String sort) {
+        List<Product> products = productService.findProductsSorted(sort);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> getFilteredProducts(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice
+    ) {
+        if (minPrice == null) {
+            minPrice = 0.0;  // Default minimal price
+        }
+        if (maxPrice == null) {
+            maxPrice = Double.MAX_VALUE;  // Default maximum price
+        }
+
+        List<Product> products = productService.findProductsFiltered(category, minPrice, maxPrice);
+        return ResponseEntity.ok(products);
     }
 
 

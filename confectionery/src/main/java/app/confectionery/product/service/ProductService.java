@@ -18,4 +18,11 @@ public interface ProductService {
     void deleteProduct(Long productId);
 
     Product updateProduct(Long productId, ProductRequestDTO productRequest, FileData fileData);
+
+    List<Product> findProductsSorted(String sort);
+
+    List<Product> filterProducts(String category, Double minPrice, Double maxPrice);
+
+    List<Product> findProductsFiltered(String category, double minPrice, double maxPrice);
+
 }

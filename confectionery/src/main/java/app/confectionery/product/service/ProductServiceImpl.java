@@ -5,6 +5,7 @@ import app.confectionery.product.model.Product;
 import app.confectionery.product.model.ProductRequestDTO;
 import app.confectionery.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,6 +60,26 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(product);
     }
 
+    public List<Product> findProductsSorted(String sort) {
+        Sort sortDirection = Sort.by("price");
+        if ("cheapest".equals(sort)) {
+            sortDirection = sortDirection.ascending();
+        } else if ("expensive".equals(sort)) {
+            sortDirection = sortDirection.descending();
+        }
+        return productRepository.findAll(sortDirection);
+    }
+
+    public List<Product> findProductsFiltered(String category, double minPrice, double maxPrice) {
+        if (category == null || category.isEmpty()) {
+            return productRepository.findByPriceBetween(minPrice, maxPrice);
+        }
+        return productRepository.findByCategoryAndPriceBetween(category, minPrice, maxPrice);
+    }
+
+    public List<Product> filterProducts(String category, Double minPrice, Double maxPrice) {
+        return productRepository.findByCategoryAndPriceBetween(category, minPrice, maxPrice);
+    }
 
 
 }
