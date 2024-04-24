@@ -40,6 +40,8 @@ public class SecurityConfiguration {
                         req
                                 .requestMatchers("api/auth/**")
                                 .permitAll()
+                                .requestMatchers("/api/user/products/**")
+                                .permitAll()
                                 .requestMatchers("/api/user/*").hasAnyRole(ADMIN.name(), MEMBER.name())
                                 .requestMatchers("/api/addresses/*").hasAnyRole(ADMIN.name(), MEMBER.name())
                                 .requestMatchers("/api/admin/products/**").hasAnyRole(ADMIN.name())

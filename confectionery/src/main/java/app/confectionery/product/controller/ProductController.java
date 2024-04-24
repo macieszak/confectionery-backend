@@ -62,13 +62,13 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("img/{fileName}")
-    public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
-        byte[] imageData = storageService.downloadImageFromFileSystem(fileName);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(imageData);
-    }
+//    @GetMapping("img/{fileName}")
+//    public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
+//        byte[] imageData = storageService.downloadImageFromFileSystem(fileName);
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .contentType(MediaType.valueOf("image/png"))
+//                .body(imageData);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
