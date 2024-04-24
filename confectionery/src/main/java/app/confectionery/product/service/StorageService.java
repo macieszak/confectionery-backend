@@ -13,4 +13,6 @@ public interface StorageService {
 
     byte[] downloadImageFromFileSystem(String fileName) throws IOException;
 
+    FileData uploadImageToFileSystemAndReturnFileData(MultipartFile file, Long productId) throws IOException;
+
 }

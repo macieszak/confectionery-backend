@@ -38,4 +38,27 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id);
     }
 
+    @Override
+    public void deleteProduct(Long productId) {
+        productRepository.deleteById(productId);
+    }
+
+
+    @Override
+    public Product updateProduct(Long productId, ProductRequestDTO productRequest, FileData fileData) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        product.setName(productRequest.getName());
+        product.setCategory(productRequest.getCategory());
+        product.setPrice(productRequest.getPrice());
+        product.setDescription(productRequest.getDescription());
+
+        product.setImage(fileData);
+        // Handle image update if necessary
+        return productRepository.save(product);
+    }
+
+
+
 }
