@@ -55,15 +55,19 @@ public class ProductForUserController {
             @RequestParam(required = false) Double maxPrice
     ) {
         if (minPrice == null) {
-            minPrice = 0.0;  // Default minimal price
+            minPrice = 0.0;
         }
         if (maxPrice == null) {
-            maxPrice = Double.MAX_VALUE;  // Default maximum price
+            maxPrice = Double.MAX_VALUE;
         }
-
-        List<Product> products = productService.findProductsFiltered(category, minPrice, maxPrice);
+        List<Product> products = productService.filterProducts(category, minPrice, maxPrice);
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProductsByName(@RequestParam String query) {
+        List<Product> products = productService.searchProductsByName(query);
+        return ResponseEntity.ok(products);
+    }
 
 }

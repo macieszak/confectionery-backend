@@ -21,8 +21,8 @@ public interface ProductService {
 
     List<Product> findProductsSorted(String sort);
 
-    List<Product> filterProducts(String category, Double minPrice, Double maxPrice);
+    List<Product> filterProducts(String category, double minPrice, double maxPrice);
 
-    List<Product> findProductsFiltered(String category, double minPrice, double maxPrice);
+    List<Product> searchProductsByName(String query);
 
 }

@@ -70,16 +70,15 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(sortDirection);
     }
 
-    public List<Product> findProductsFiltered(String category, double minPrice, double maxPrice) {
+    public List<Product> filterProducts(String category, double minPrice, double maxPrice) {
         if (category == null || category.isEmpty()) {
             return productRepository.findByPriceBetween(minPrice, maxPrice);
         }
         return productRepository.findByCategoryAndPriceBetween(category, minPrice, maxPrice);
     }
 
-    public List<Product> filterProducts(String category, Double minPrice, Double maxPrice) {
-        return productRepository.findByCategoryAndPriceBetween(category, minPrice, maxPrice);
+    public List<Product> searchProductsByName(String query) {
+        return productRepository.findByNameContainingIgnoreCase(query);
     }
-
 
 }
