@@ -6,8 +6,6 @@ import app.confectionery.product.model.ProductRequestDTO;
 import app.confectionery.product.service.ProductService;
 import app.confectionery.product.service.StorageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,14 +60,6 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-//    @GetMapping("img/{fileName}")
-//    public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
-//        byte[] imageData = storageService.downloadImageFromFileSystem(fileName);
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .contentType(MediaType.valueOf("image/png"))
-//                .body(imageData);
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         return productService.findById(id)
@@ -110,7 +100,7 @@ public class ProductController {
         try {
             //FileData fileData = storageService.uploadImageToFileSystemAndReturnFileData(image);
             FileData fileData = storageService.uploadImageToFileSystemAndReturnFileData(image, productId);
-            newProduct = productService.updateProduct(productId,productRequestDTO, fileData);
+            newProduct = productService.updateProduct(productId, productRequestDTO, fileData);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

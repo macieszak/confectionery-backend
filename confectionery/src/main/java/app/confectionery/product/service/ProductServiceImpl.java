@@ -7,7 +7,9 @@ import app.confectionery.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
+    @Transactional
     @Override
     public Product addNewProduct(ProductRequestDTO productRequestDTO, FileData fileData) {
         Product product = Product.builder()
@@ -26,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
                 .description(productRequestDTO.getDescription())
                 .image(fileData)
                 .build();
+
         return productRepository.save(product);
     }
 
