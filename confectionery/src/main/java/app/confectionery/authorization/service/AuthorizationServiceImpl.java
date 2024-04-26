@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.security.core.AuthenticationException;
 
+import java.math.BigDecimal;
+
 @Service
 @RequiredArgsConstructor
 public class AuthorizationServiceImpl implements AuthorizationService{
@@ -39,6 +41,7 @@ public class AuthorizationServiceImpl implements AuthorizationService{
                     .password(passwordEncoder.encode(registerRequest.getPassword()))
                     .role(registerRequest.getRole())
                     .phoneNumber(registerRequest.getPhoneNumber())
+                    .balance(BigDecimal.ZERO)
                     .build();
 
             var savedUser = userRepository.save(user);
