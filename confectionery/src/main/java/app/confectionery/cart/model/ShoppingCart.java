@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,10 +35,7 @@ public class ShoppingCart {
     private User user;
 
     @OneToMany(cascade = CascadeType.DETACH, mappedBy = "cart", fetch = FetchType.EAGER)
-    private Set<CartItem> cartItems;
-
-
-
+    private List<CartItem> cartItems; //ew. Set<CartItem>
 
 
 }
