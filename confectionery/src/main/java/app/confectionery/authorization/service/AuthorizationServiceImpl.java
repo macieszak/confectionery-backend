@@ -3,6 +3,8 @@ package app.confectionery.authorization.service;
 import app.confectionery.authorization.model.request.AuthenticationRequest;
 import app.confectionery.authorization.model.response.AuthenticationResponse;
 import app.confectionery.authorization.model.request.RegisterRequest;
+import app.confectionery.cart.model.ShoppingCart;
+import app.confectionery.cart.repository.ShoppingCartRepository;
 import app.confectionery.configuration.jwt.JwtService;
 import app.confectionery.exception.CustomAuthenticationException;
 import app.confectionery.user.model.User;
@@ -19,12 +21,15 @@ import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
-public class AuthorizationServiceImpl implements AuthorizationService{
+public class AuthorizationServiceImpl implements AuthorizationService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
+    private final ShoppingCartRepository shoppingCartRepository;
+
 
     @Override
     public AuthenticationResponse register(RegisterRequest registerRequest) {
@@ -44,7 +49,13 @@ public class AuthorizationServiceImpl implements AuthorizationService{
                     .balance(BigDecimal.ZERO)
                     .build();
 
+            ShoppingCart shoppingCart = ShoppingCart.builder().totalItems(0).totalPrice(0.0).build();
+            shoppingCart.setUser(user);
+            user.setCart(shoppingCart);
+
             var savedUser = userRepository.save(user);
+            shoppingCartRepository.save(shoppingCart);
+
             String jwtToken = jwtService.generateToken(user);
 
             return AuthenticationResponse.builder()

@@ -1,17 +1,19 @@
 package app.confectionery.user.model;
 
 
+import app.confectionery.address.model.Address;
+import app.confectionery.cart.model.ShoppingCart;
+import app.confectionery.wallet.model.Transaction;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +22,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = {"user", "cartItems"})
 public class User implements UserDetails {
 
     @Id
@@ -40,8 +43,20 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private ShoppingCart cart;
+
     @Column(name = "balance", nullable = false)
     private BigDecimal balance = BigDecimal.ZERO;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private List<Transaction> transactions;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private Set<Address> addresses;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -17,7 +17,7 @@ import java.util.UUID;
 public class TransactionController {
 
     private final TransactionService transactionService;
-    
+
     @PostMapping("/deposit")
     public ResponseEntity<?> deposit(@RequestBody DepositRequest depositRequest) {
         Transaction transaction = transactionService.deposit(depositRequest);
