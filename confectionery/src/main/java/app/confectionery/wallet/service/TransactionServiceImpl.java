@@ -51,5 +51,15 @@ public class TransactionServiceImpl implements TransactionService {
         return user.getBalance();
     }
 
+    @Override
+    public void recordTransaction(UUID userId, BigDecimal amount, String transactionType) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Transaction transaction = new Transaction();
+        transaction.setUser(user);
+        transaction.setAmount(amount);
+        transaction.setTransactionType(transactionType);
+        transactionRepository.save(transaction);
+    }
+
 
 }

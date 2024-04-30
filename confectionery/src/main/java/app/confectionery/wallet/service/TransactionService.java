@@ -13,4 +13,6 @@ public interface TransactionService {
     Transaction withdraw(UUID userId, BigDecimal amount);
 
     BigDecimal getCurrentUserBalance(UUID userId);
+
+    void recordTransaction(UUID userId, BigDecimal amount, String transactionType);
 }

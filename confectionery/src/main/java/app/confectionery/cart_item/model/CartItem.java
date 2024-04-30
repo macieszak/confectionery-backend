@@ -1,6 +1,7 @@
 package app.confectionery.cart_item.model;
 
 import app.confectionery.cart.model.ShoppingCart;
+import app.confectionery.order.model.Order;
 import app.confectionery.product.model.Product;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -29,6 +30,10 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "shopping_cart_id", referencedColumnName = "shopping_cart_id")
     private ShoppingCart cart;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private Order order;
 
     private int quantity;
 
