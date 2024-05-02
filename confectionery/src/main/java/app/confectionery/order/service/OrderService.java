@@ -1,5 +1,6 @@
 package app.confectionery.order.service;
 
+import app.confectionery.order.model.DTO.OrderDTO;
 import app.confectionery.order.model.Order;
 
 import java.util.List;
@@ -9,5 +10,6 @@ public interface OrderService {
 
     Order createOrder(UUID userId, Integer addressId, List<Long> cartItemIds);
 
+    List<OrderDTO> getUserOrders(UUID userId);
 
 }

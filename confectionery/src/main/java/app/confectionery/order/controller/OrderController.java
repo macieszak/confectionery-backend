@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/orders")
@@ -36,6 +39,15 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUserOrders(@PathVariable UUID userId) {
+        try {
+            List<OrderDTO> orders = orderService.getUserOrders(userId);
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error retrieving orders: " + e.getMessage());
+        }
+    }
 
 
 }

@@ -1,7 +1,6 @@
 package app.confectionery.product.model;
 
 
-import app.confectionery.cart_item.model.CartItem;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -37,10 +36,5 @@ public class Product {
 
     @Transient
     private String imagePath;
-
-//    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @ToString.Exclude
-//    private CartItem cartItem;
-
 
 }

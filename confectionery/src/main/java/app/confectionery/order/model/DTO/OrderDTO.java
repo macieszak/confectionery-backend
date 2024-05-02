@@ -5,6 +5,8 @@ import app.confectionery.product.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDTO {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderDTO.class);
 
     private Long orderId;
     private String addressDetails;
