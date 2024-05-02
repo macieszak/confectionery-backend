@@ -3,6 +3,7 @@ package app.confectionery.user.model;
 
 import app.confectionery.address.model.Address;
 import app.confectionery.cart.model.ShoppingCart;
+import app.confectionery.order.model.Order;
 import app.confectionery.wallet.model.Transaction;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,11 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "user")
@@ -57,6 +54,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Address> addresses;
+
+//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+//    private List<Order> orders;
+
+    @Enumerated(EnumType.STRING)
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

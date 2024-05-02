@@ -1,5 +1,8 @@
 package app.confectionery.user.service;
 
+import app.confectionery.order.repository.OrderRepository;
+import app.confectionery.user.model.AccountStatus;
+import app.confectionery.user.model.UserSummaryDTO;
 import app.confectionery.authorization.model.response.AuthenticationResponse;
 import app.confectionery.configuration.jwt.JwtService;
 import app.confectionery.user.model.User;
@@ -9,10 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -24,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final OrderRepository orderRepository;
 
 
 
@@ -88,5 +95,25 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + username));
     }
 
+    //@Transactional
+    public List<UserSummaryDTO> getAllUserSummaries() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(user -> {
+            long orderCount = orderRepository.countByUserId(user.getId());
+            String accountStatus = Optional.ofNullable(user.getAccountStatus())
+                    .map(AccountStatus::name)
+                    .orElse("UNKNOWN");  // Default to "UNKNOWN" or any other fallback value
+
+            return new UserSummaryDTO(
+                    user.getId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getBalance(),
+                    (int) orderCount,
+                    accountStatus
+            );
+        }).collect(Collectors.toList());
+    }
 
 }

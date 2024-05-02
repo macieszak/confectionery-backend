@@ -48,6 +48,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/wallet/**").hasAnyRole(ADMIN.name(), MEMBER.name())
                                 .requestMatchers("/api/cart/**").hasAnyRole(ADMIN.name(), MEMBER.name())
                                 .requestMatchers("/api/orders/**").hasAnyRole(ADMIN.name(), MEMBER.name())
+                                .requestMatchers("/api/admin/users/**").hasAnyRole(ADMIN.name())
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

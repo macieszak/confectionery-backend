@@ -5,6 +5,8 @@ import app.confectionery.product.model.Product;
 import app.confectionery.product.model.ProductRequestDTO;
 import app.confectionery.product.service.ProductService;
 import app.confectionery.product.service.StorageService;
+import app.confectionery.user.model.UserSummaryDTO;
+import app.confectionery.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
