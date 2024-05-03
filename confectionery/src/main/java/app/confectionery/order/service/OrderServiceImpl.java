@@ -7,6 +7,7 @@ import app.confectionery.cart_item.model.CartItem;
 import app.confectionery.cart_item.model.ItemStatus;
 import app.confectionery.cart_item.repository.CartItemRepository;
 import app.confectionery.order.model.DTO.OrderDTO;
+import app.confectionery.order.model.DTO.OrderDetailsDTO;
 import app.confectionery.order.model.Order;
 import app.confectionery.order.model.OrderStatus;
 import app.confectionery.order.repository.OrderRepository;
@@ -90,6 +91,22 @@ public class OrderServiceImpl implements OrderService {
 
         return savedOrder;
     }
+
+
+    public List<OrderDetailsDTO> getOrdersByUserId(UUID userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream()
+                .map(order -> new OrderDetailsDTO(
+                        order.getId(),
+                        order.getUser().getFirstName(),
+                        order.getUser().getLastName(),
+                        order.getOrderDate(),
+                        order.getTotalPrice(),
+                        order.getStatus().name()
+                ))
+                .collect(Collectors.toList());
+    }
+
 
     private void clearShoppingCart(ShoppingCart cart) {
         cart.setTotalPrice(0.0);

@@ -18,6 +18,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     long countByUserId(UUID userId);
 
-
+    List<Order> findByUserId(UUID userId);
 
 }
