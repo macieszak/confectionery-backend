@@ -28,13 +28,9 @@ public class AdminUserController {
         return ResponseEntity.ok(userSummaries);
     }
 
-
     @GetMapping("/{userId}/orders")
     public ResponseEntity<List<OrderDetailsDTO>> getUserOrders(@PathVariable UUID userId) {
         List<OrderDetailsDTO> orders = orderService.getOrdersByUserId(userId);
-//        if (orders.isEmpty()) {
-//            return ResponseEntity.notFound().build();
-//        }
         return ResponseEntity.ok(orders);
     }
 

@@ -10,6 +10,7 @@ import app.confectionery.order.model.DTO.OrderDTO;
 import app.confectionery.order.model.DTO.OrderDetailsDTO;
 import app.confectionery.order.model.Order;
 import app.confectionery.order.model.OrderStatus;
+import app.confectionery.order.model.StatusUpdateRequest;
 import app.confectionery.order.repository.OrderRepository;
 import app.confectionery.user.model.User;
 import app.confectionery.user.repository.UserRepository;
@@ -100,6 +101,7 @@ public class OrderServiceImpl implements OrderService {
                         order.getId(),
                         order.getUser().getFirstName(),
                         order.getUser().getLastName(),
+                        order.getUser().getEmail(),
                         order.getOrderDate(),
                         order.getTotalPrice(),
                         order.getStatus().name()
@@ -121,5 +123,37 @@ public class OrderServiceImpl implements OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .add(SHIPPING_COST);
     }
+
+
+    @Override
+    public List<OrderDetailsDTO> getAllOrders() {
+        return orderRepository.findAll().stream()
+                .map(order -> new OrderDetailsDTO(
+                        order.getId(),
+                        order.getUser().getFirstName(),
+                        order.getUser().getLastName(),
+                        order.getUser().getEmail(),
+                        order.getOrderDate(),
+                        order.getTotalPrice(),
+                        order.getStatus().name()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderDetailsDTO updateOrderStatus(Long orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        order.setStatus(newStatus);
+        orderRepository.save(order);
+        return new OrderDetailsDTO(
+                order.getId(),
+                order.getUser().getFirstName(),
+                order.getUser().getLastName(),
+                order.getUser().getEmail(),
+                order.getOrderDate(),
+                order.getTotalPrice(),
+                order.getStatus().name());
+    }
+
 
 }
