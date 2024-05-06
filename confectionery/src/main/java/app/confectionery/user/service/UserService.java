@@ -1,6 +1,7 @@
 package app.confectionery.user.service;
 
 import app.confectionery.authorization.model.response.AuthenticationResponse;
+import app.confectionery.user.model.AccountStatus;
 import app.confectionery.user.model.User;
 import app.confectionery.user.model.UserSummaryDTO;
 import app.confectionery.user.model.UserUpdateInfoDTO;
@@ -16,4 +17,5 @@ public interface UserService {
     String generateTokenForUser(User updatedUser);
     UserDetails loadUserByUsername(String username);
     List<UserSummaryDTO> getAllUserSummaries();
+    UserSummaryDTO updateUserStatus(UUID userId, AccountStatus accountStatus);
 }

@@ -7,6 +7,7 @@ import app.confectionery.cart.model.ShoppingCart;
 import app.confectionery.cart.repository.ShoppingCartRepository;
 import app.confectionery.configuration.jwt.JwtService;
 import app.confectionery.exception.CustomAuthenticationException;
+import app.confectionery.user.model.AccountStatus;
 import app.confectionery.user.model.User;
 import app.confectionery.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                     .role(registerRequest.getRole())
                     .phoneNumber(registerRequest.getPhoneNumber())
                     .balance(BigDecimal.ZERO)
+                    .accountStatus(AccountStatus.ACTIVE)
                     .build();
 
             ShoppingCart shoppingCart = ShoppingCart.builder().totalItems(0).totalPrice(0.0).build();
@@ -96,6 +98,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
             var user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow();
+
+            if (user.getAccountStatus() == AccountStatus.BLOCK) {
+                throw new IllegalStateException("Account is inactive.");
+            }
+
             String jwtToken = jwtService.generateToken(user);
 
             return AuthenticationResponse.builder()

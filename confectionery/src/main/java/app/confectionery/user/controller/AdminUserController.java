@@ -1,15 +1,17 @@
 package app.confectionery.user.controller;
 
 import app.confectionery.order.model.DTO.OrderDetailsDTO;
+import app.confectionery.order.model.StatusUpdateRequest;
+import app.confectionery.order.repository.OrderRepository;
 import app.confectionery.order.service.OrderService;
+import app.confectionery.user.model.AccountStatus;
+import app.confectionery.user.model.User;
+import app.confectionery.user.model.UserStatusUpdateRequest;
 import app.confectionery.user.model.UserSummaryDTO;
 import app.confectionery.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +23,7 @@ public class AdminUserController {
 
     private final UserService userService;
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/all")
     public ResponseEntity<List<UserSummaryDTO>> getUserSummaries() {
@@ -34,5 +37,11 @@ public class AdminUserController {
         return ResponseEntity.ok(orders);
     }
 
+    @PutMapping("/{userId}/status")
+    public ResponseEntity<UserSummaryDTO> updateUserStatus(@PathVariable UUID userId, @RequestBody UserStatusUpdateRequest userStatusUpdateRequest) {
+        AccountStatus accountStatus = AccountStatus.valueOf(userStatusUpdateRequest.getNewStatus());
+        UserSummaryDTO updatedUser = userService.updateUserStatus(userId, accountStatus);
+        return ResponseEntity.ok(updatedUser);
+    }
 
 }

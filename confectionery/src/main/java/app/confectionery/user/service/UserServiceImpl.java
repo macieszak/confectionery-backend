@@ -9,6 +9,8 @@ import app.confectionery.user.model.User;
 import app.confectionery.user.model.UserUpdateInfoDTO;
 import app.confectionery.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private static final String PHONE_REGEX = "^(\\+?\\d{2}-?)?(\\d{3}-?){3}$";
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -116,6 +119,29 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public UserSummaryDTO updateUserStatus(UUID userId, AccountStatus accountStatus) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        log.debug("Updating status for user: {} to {}", user.getId(), accountStatus);
+        user.setAccountStatus(accountStatus);
+        long orderCount = orderRepository.countByUserId(user.getId());
+
+        try {
+            userRepository.save(user);
+        } catch (RuntimeException ex) {
+            log.error("Error updating user status: {}", ex.getMessage(), ex);
+            throw ex;
+        }
+
+        return new UserSummaryDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getBalance(),
+                (int) orderCount,
+                user.getAccountStatus().name());
+    }
 
 
 }

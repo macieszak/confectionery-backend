@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -59,7 +60,8 @@ public class User implements UserDetails {
 //    private List<Order> orders;
 
     @Enumerated(EnumType.STRING)
-    private AccountStatus accountStatus = AccountStatus.ACTIVE;
+    private AccountStatus accountStatus;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
