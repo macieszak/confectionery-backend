@@ -1,5 +1,14 @@
 package app.confectionery.user.service;
 
+import app.confectionery.address.model.Address;
+import app.confectionery.address.repository.AddressRepository;
+import app.confectionery.cart.model.ShoppingCart;
+import app.confectionery.cart.repository.ShoppingCartRepository;
+import app.confectionery.cart_item.model.CartItem;
+import app.confectionery.cart_item.repository.CartItemRepository;
+import app.confectionery.favorite_products.model.Favorite;
+import app.confectionery.favorite_products.repository.FavoriteRepository;
+import app.confectionery.order.model.Order;
 import app.confectionery.order.repository.OrderRepository;
 import app.confectionery.user.model.AccountStatus;
 import app.confectionery.user.model.UserSummaryDTO;
@@ -8,6 +17,8 @@ import app.confectionery.configuration.jwt.JwtService;
 import app.confectionery.user.model.User;
 import app.confectionery.user.model.UserUpdateInfoDTO;
 import app.confectionery.user.repository.UserRepository;
+import app.confectionery.wallet.model.Transaction;
+import app.confectionery.wallet.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -34,6 +43,11 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final OrderRepository orderRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final TransactionRepository transactionRepository;
+    private final AddressRepository addressRepository;
+    private final FavoriteRepository favoriteRepository;
 
 
 
@@ -143,5 +157,35 @@ public class UserServiceImpl implements UserService {
                 user.getAccountStatus().name());
     }
 
+    @Override
+    @Transactional
+    public void deleteUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.getOrders().forEach(order -> {
+            cartItemRepository.deleteAllInBatch(order.getItems());
+        });
+        orderRepository.deleteAllInBatch(user.getOrders());
+        
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId);
+
+        if (shoppingCart != null) {
+            List<CartItem> cartItems = cartItemRepository.findAllByCart(shoppingCart);
+            cartItemRepository.deleteAllInBatch(cartItems);
+            shoppingCartRepository.deleteAllInBatch(Collections.singleton(shoppingCart));
+        }
+
+        List<Address> addresses = addressRepository.findByUserId(userId);
+        addressRepository.deleteAllInBatch(addresses);
+
+        List<Favorite> favorites = favoriteRepository.findAllByUserId(userId);
+        favoriteRepository.deleteAllInBatch(favorites);
+
+        List<Transaction> transactions = transactionRepository.findAllByUserId(userId);
+        transactionRepository.deleteAllInBatch(transactions);
+
+        userRepository.deleteAllInBatch(Collections.singleton(user));
+    }
 
 }

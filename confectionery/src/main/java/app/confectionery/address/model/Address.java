@@ -19,7 +19,7 @@ public class Address {
     @Column(nullable = false)
     private String addressName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     @ToString.Exclude
     private User user;

@@ -1,5 +1,6 @@
 package app.confectionery.order.repository;
 
+import app.confectionery.cart_item.model.CartItem;
 import app.confectionery.order.model.Order;
 import app.confectionery.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +17,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     long countByUserId(UUID userId);
 
     List<Order> findByUserId(UUID userId);
+
+    //List<Order> findByItems(List<CartItem> items);
 
 }

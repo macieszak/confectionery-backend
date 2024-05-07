@@ -29,13 +29,14 @@ public class ShoppingCart {
 
     private int totalItems;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ToString.Exclude
     private User user;
 
     @OneToMany(cascade = CascadeType.DETACH, mappedBy = "cart", fetch = FetchType.EAGER)
-    private List<CartItem> cartItems; //ew. Set<CartItem>
+    @ToString.Exclude
+    private List<CartItem> cartItems;
 
 
 }

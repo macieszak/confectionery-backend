@@ -71,6 +71,7 @@ public class AddressServiceImpl implements AddressService {
     public void deleteAddress(Integer id) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Address not found with ID: " + id));
+
         addressRepository.delete(address);
     }
 

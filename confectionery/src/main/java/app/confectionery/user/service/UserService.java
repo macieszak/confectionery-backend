@@ -18,4 +18,5 @@ public interface UserService {
     UserDetails loadUserByUsername(String username);
     List<UserSummaryDTO> getAllUserSummaries();
     UserSummaryDTO updateUserStatus(UUID userId, AccountStatus accountStatus);
+    void deleteUser(UUID userId);
 }

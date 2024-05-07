@@ -28,7 +28,7 @@ public class CartItem {
     @ToString.Exclude
     private Product product;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "shopping_cart_id", referencedColumnName = "shopping_cart_id")
     @JsonIgnore
     private ShoppingCart cart;
