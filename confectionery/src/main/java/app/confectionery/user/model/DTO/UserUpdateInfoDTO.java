@@ -1,4 +1,4 @@
-package app.confectionery.user.model;
+package app.confectionery.user.model.DTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

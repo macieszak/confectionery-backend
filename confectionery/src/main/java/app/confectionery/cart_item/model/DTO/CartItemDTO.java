@@ -1,4 +1,4 @@
-package app.confectionery.cart_item.model;
+package app.confectionery.cart_item.model.DTO;
 
 import app.confectionery.product.model.FileData;
 import lombok.AllArgsConstructor;

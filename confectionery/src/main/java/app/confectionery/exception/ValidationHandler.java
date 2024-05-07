@@ -34,9 +34,16 @@ public class ValidationHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class, UserNotFoundException.class})
+    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class, UserNotFoundException.class, DuplicateAddressException.class})
     public ResponseEntity<ErrorResponse> handleStateException(Exception ex) {
-        HttpStatus status = ex instanceof UserNotFoundException ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+        HttpStatus status;
+        if (ex instanceof UserNotFoundException) {
+            status = HttpStatus.NOT_FOUND;
+        } else if (ex instanceof DuplicateAddressException) {
+            status = HttpStatus.CONFLICT;
+        } else {
+            status = HttpStatus.BAD_REQUEST;
+        }
         return ResponseEntity.status(status).body(new ErrorResponse(status.value(), ex.getMessage()));
     }
 

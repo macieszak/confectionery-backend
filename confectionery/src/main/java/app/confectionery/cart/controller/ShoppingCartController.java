@@ -2,7 +2,7 @@ package app.confectionery.cart.controller;
 
 import app.confectionery.cart.service.ShoppingCartService;
 import app.confectionery.cart_item.model.CartItem;
-import app.confectionery.cart_item.model.CartItemDTO;
+import app.confectionery.cart_item.model.DTO.CartItemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/cart/")
+@RequestMapping("api/users")
 @RequiredArgsConstructor
 public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
 
-    @PostMapping("/add/{userId}/{productId}/{quantity}")
+    @PostMapping("/{userId}/products/{productId}/{quantity}")
     public ResponseEntity<String> addProductToCart(@PathVariable UUID userId, @PathVariable Long productId, @PathVariable int quantity) {
         try {
             CartItem cartItem = shoppingCartService.addProductToCart(userId, productId, quantity);
@@ -28,7 +28,7 @@ public class ShoppingCartController {
         }
     }
 
-    @GetMapping("/count/{userId}")
+    @GetMapping("/{userId}/items-number")
     public ResponseEntity<Integer> getCartItemCount(@PathVariable UUID userId) {
         try {
             int itemCount = shoppingCartService.getCartItemCount(userId);
@@ -38,7 +38,7 @@ public class ShoppingCartController {
         }
     }
 
-    @GetMapping("/items/{userId}")
+    @GetMapping("/{userId}/items")
     public ResponseEntity<List<CartItemDTO>> getCartItems(@PathVariable UUID userId) {
         try {
             List<CartItemDTO> items = shoppingCartService.getCartItems(userId);
@@ -48,7 +48,7 @@ public class ShoppingCartController {
         }
     }
 
-    @PostMapping("/increment/{userId}/{productId}")
+    @PostMapping("/{userId}/products/{productId}/increment")
     public ResponseEntity<String> incrementProductQuantity(@PathVariable UUID userId, @PathVariable Long productId) {
         try {
             shoppingCartService.incrementQuantity(userId, productId);
@@ -58,7 +58,7 @@ public class ShoppingCartController {
         }
     }
 
-    @PostMapping("/decrement/{userId}/{productId}")
+    @PostMapping("/{userId}/products/{productId}/decrement")
     public ResponseEntity<String> decrementProductQuantity(@PathVariable UUID userId, @PathVariable Long productId) {
         try {
             shoppingCartService.decrementQuantity(userId, productId);
@@ -68,7 +68,7 @@ public class ShoppingCartController {
         }
     }
 
-    @DeleteMapping("/remove/{userId}/{productId}")
+    @DeleteMapping("/{userId}/products/{productId}")
     public ResponseEntity<String> removeProductFromCart(@PathVariable UUID userId, @PathVariable Long productId) {
         try {
             shoppingCartService.removeCartItem(userId, productId);
@@ -77,6 +77,5 @@ public class ShoppingCartController {
             return ResponseEntity.badRequest().body("Error removing product from cart: " + e.getMessage());
         }
     }
-
 
 }

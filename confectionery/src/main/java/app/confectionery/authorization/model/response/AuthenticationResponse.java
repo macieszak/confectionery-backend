@@ -23,7 +23,7 @@ public class AuthenticationResponse {
 
     private String lastName;
 
-    private String phoneNumber; //do usuniecia jc
+    private String phoneNumber;
 
     private String email;
 

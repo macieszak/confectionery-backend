@@ -1,4 +1,4 @@
-package app.confectionery.user.model;
+package app.confectionery.user.model.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSummaryDTO {
+
     private UUID userId;
     private String firstName;
     private String lastName;
@@ -18,4 +19,5 @@ public class UserSummaryDTO {
     private BigDecimal amountOfMoney;
     private int numberOfOrders;
     private String accountStatus;
+
 }

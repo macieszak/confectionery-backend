@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "shopping_cart")
@@ -37,6 +36,5 @@ public class ShoppingCart {
     @OneToMany(cascade = CascadeType.DETACH, mappedBy = "cart", fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<CartItem> cartItems;
-
 
 }

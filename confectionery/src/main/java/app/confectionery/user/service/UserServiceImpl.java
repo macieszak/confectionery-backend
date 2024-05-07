@@ -8,14 +8,13 @@ import app.confectionery.cart_item.model.CartItem;
 import app.confectionery.cart_item.repository.CartItemRepository;
 import app.confectionery.favorite_products.model.Favorite;
 import app.confectionery.favorite_products.repository.FavoriteRepository;
-import app.confectionery.order.model.Order;
 import app.confectionery.order.repository.OrderRepository;
 import app.confectionery.user.model.AccountStatus;
-import app.confectionery.user.model.UserSummaryDTO;
+import app.confectionery.user.model.DTO.UserSummaryDTO;
 import app.confectionery.authorization.model.response.AuthenticationResponse;
 import app.confectionery.configuration.jwt.JwtService;
 import app.confectionery.user.model.User;
-import app.confectionery.user.model.UserUpdateInfoDTO;
+import app.confectionery.user.model.DTO.UserUpdateInfoDTO;
 import app.confectionery.user.repository.UserRepository;
 import app.confectionery.wallet.model.Transaction;
 import app.confectionery.wallet.repository.TransactionRepository;
@@ -31,7 +30,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -39,9 +37,10 @@ public class UserServiceImpl implements UserService {
     private static final String PHONE_REGEX = "^(\\+?\\d{2}-?)?(\\d{3}-?){3}$";
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+
+    private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final CartItemRepository cartItemRepository;
@@ -49,13 +48,10 @@ public class UserServiceImpl implements UserService {
     private final AddressRepository addressRepository;
     private final FavoriteRepository favoriteRepository;
 
-
-
     @Override
     public AuthenticationResponse updateUserProfileAndGenerateToken(UUID id, UserUpdateInfoDTO userUpdateInfoDTO) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Check if the new email is different from the current and already taken by another user
         Optional<User> existingUserWithNewEmail = userRepository.findByEmail(userUpdateInfoDTO.getEmail());
         if (existingUserWithNewEmail.isPresent() && !existingUserWithNewEmail.get().getId().equals(user.getId())) {
             throw new IllegalStateException("Email already in use. Please use a different email.");
@@ -81,15 +77,15 @@ public class UserServiceImpl implements UserService {
 
         user.setFirstName(userUpdateInfoDTO.getFirstName());
         user.setLastName(userUpdateInfoDTO.getLastName());
-        // Validate phone number if it is not null or empty
+
         if (userUpdateInfoDTO.getPhoneNumber() != null && !userUpdateInfoDTO.getPhoneNumber().isEmpty()) {
             if (!Pattern.matches(PHONE_REGEX, userUpdateInfoDTO.getPhoneNumber())) {
                 throw new IllegalArgumentException("Invalid phone number format");
             }
         }
-        user.setPhoneNumber(userUpdateInfoDTO.getPhoneNumber());  // Set the phone number whether it is valid or not (empty is allowed)
+        user.setPhoneNumber(userUpdateInfoDTO.getPhoneNumber());
         user.setEmail(userUpdateInfoDTO.getEmail());
-        // Check password if it is not null, empty and at least 8 characters long
+
         if (userUpdateInfoDTO.getPassword() != null && !userUpdateInfoDTO.getPassword().isEmpty()) {
             if (userUpdateInfoDTO.getPassword().length() < 8) {
                 throw new IllegalArgumentException("Password must be at least 8 characters long");
@@ -112,14 +108,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + username));
     }
 
-    //@Transactional
     public List<UserSummaryDTO> getAllUserSummaries() {
         List<User> users = userRepository.findAll();
         return users.stream().map(user -> {
             long orderCount = orderRepository.countByUserId(user.getId());
             String accountStatus = Optional.ofNullable(user.getAccountStatus())
                     .map(AccountStatus::name)
-                    .orElse("UNKNOWN");  // Default to "UNKNOWN" or any other fallback value
+                    .orElse("UNKNOWN");
 
             return new UserSummaryDTO(
                     user.getId(),
@@ -167,7 +162,7 @@ public class UserServiceImpl implements UserService {
             cartItemRepository.deleteAllInBatch(order.getItems());
         });
         orderRepository.deleteAllInBatch(user.getOrders());
-        
+
         ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId);
 
         if (shoppingCart != null) {

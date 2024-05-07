@@ -1,4 +1,4 @@
-package app.confectionery.product.model;
+package app.confectionery.product.model.DTO;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

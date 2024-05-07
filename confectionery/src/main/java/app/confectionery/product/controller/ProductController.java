@@ -1,65 +1,38 @@
 package app.confectionery.product.controller;
 
-import app.confectionery.product.model.FileData;
 import app.confectionery.product.model.Product;
-import app.confectionery.product.model.ProductRequestDTO;
 import app.confectionery.product.service.ProductService;
 import app.confectionery.product.service.StorageService;
-import app.confectionery.user.model.UserSummaryDTO;
-import app.confectionery.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/products")
+@RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final StorageService storageService;
     private final ProductService productService;
+    private final StorageService storageService;
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addProductByAdmin(
-            @RequestParam("name") String name,
-            @RequestParam("category") String category,
-            @RequestParam("price") Double price,
-            @RequestParam("description") String description,
-            @RequestParam("image") MultipartFile image) {
-
-        List<String> errors = new ArrayList<>();
-        if (name == null || name.trim().isEmpty()) errors.add("Name cannot be empty");
-        if (category == null || category.trim().isEmpty()) errors.add("Category cannot be empty");
-        if (price == null || price <= 0) errors.add("Price cannot be null or smaller than 0");
-        if (description == null || description.trim().isEmpty()) errors.add("Description cannot be empty");
-        if (image == null || image.isEmpty()) errors.add("Image cannot be null");
-
-
-        if (!errors.isEmpty()) {
-            return ResponseEntity.badRequest().body(String.join(", ", errors));
-        }
-
-        ProductRequestDTO productRequestDTO = new ProductRequestDTO(name, category, price, description, image);
-        Product newProduct;
-        try {
-            FileData fileData = storageService.uploadImageToFileSystemAndReturnFileData(image);
-            newProduct = productService.addNewProduct(productRequestDTO, fileData);
-        } catch (IOException e) {
-            throw new RuntimeException("Failure in image upload", e);
-        }
-        return ResponseEntity.ok(newProduct);
-    }
-
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.findAllProducts();
 
         return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/img/{fileName}")
+    public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
+        byte[] imageData = storageService.downloadImageFromFileSystem(fileName);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(imageData);
     }
 
     @GetMapping("/{id}")
@@ -69,47 +42,32 @@ public class ProductController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/delete/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
-        try {
-            productService.deleteProduct(productId);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error deleting product: " + e.getMessage());
-        }
+    @GetMapping("/sorted")
+    public ResponseEntity<List<Product>> getProductsSorted(@RequestParam(required = false) String sort) {
+        List<Product> products = productService.findProductsSorted(sort);
+        return ResponseEntity.ok(products);
     }
 
-    @PutMapping("/edit/{productId}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long productId,
-                                           @RequestParam("name") String name,
-                                           @RequestParam("category") String category,
-                                           @RequestParam("price") Double price,
-                                           @RequestParam("description") String description,
-                                           @RequestParam("image") MultipartFile image) {
-
-        List<String> updateErrors = new ArrayList<>();
-        if (name == null || name.trim().isEmpty()) updateErrors.add("Name cannot be empty");
-        if (category == null || category.trim().isEmpty()) updateErrors.add("Category cannot be empty");
-        if (price == null || price <= 0) updateErrors.add("Price cannot be null or smaller than 0");
-        if (description == null || description.trim().isEmpty()) updateErrors.add("Description cannot be empty");
-        if (image == null || image.isEmpty()) updateErrors.add("Image cannot be null");
-
-        if (!updateErrors.isEmpty()) {
-            return ResponseEntity.badRequest().body(String.join(", ", updateErrors));
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> getFilteredProducts(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice
+    ) {
+        if (minPrice == null) {
+            minPrice = 0.0;
         }
-        ProductRequestDTO productRequestDTO = new ProductRequestDTO(name, category, price, description, image);
-        Product newProduct;
-        try {
-            //FileData fileData = storageService.uploadImageToFileSystemAndReturnFileData(image);
-            FileData fileData = storageService.uploadImageToFileSystemAndReturnFileData(image, productId);
-            newProduct = productService.updateProduct(productId, productRequestDTO, fileData);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (maxPrice == null) {
+            maxPrice = Double.MAX_VALUE;
         }
-
-        return ResponseEntity.ok(newProduct);
+        List<Product> products = productService.filterProducts(category, minPrice, maxPrice);
+        return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProductsByName(@RequestParam String query) {
+        List<Product> products = productService.searchProductsByName(query);
+        return ResponseEntity.ok(products);
+    }
 
 }

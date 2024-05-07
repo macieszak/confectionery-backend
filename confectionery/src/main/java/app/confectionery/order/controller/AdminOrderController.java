@@ -1,6 +1,5 @@
 package app.confectionery.order.controller;
 
-
 import app.confectionery.order.model.DTO.OrderDetailsDTO;
 import app.confectionery.order.model.OrderStatus;
 import app.confectionery.order.model.StatusUpdateRequest;
@@ -18,18 +17,17 @@ public class AdminOrderController {
 
     private final OrderService orderService;
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<OrderDetailsDTO>> getAllOrders() {
         List<OrderDetailsDTO> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
-    @PostMapping("/{orderId}/status")
+    @PutMapping("/{orderId}/status")
     public ResponseEntity<OrderDetailsDTO> updateOrderStatus(@PathVariable Long orderId, @RequestBody StatusUpdateRequest statusUpdate) {
         OrderStatus newStatus = OrderStatus.valueOf(statusUpdate.getNewStatus());
         OrderDetailsDTO updatedOrder = orderService.updateOrderStatus(orderId, newStatus);
         return ResponseEntity.ok(updatedOrder);
     }
-
 
 }

@@ -1,45 +1,46 @@
 package app.confectionery.address.controller;
 
 import app.confectionery.address.model.Address;
-import app.confectionery.address.model.AddressDTO;
-import app.confectionery.address.model.NewAddressDTO;
+import app.confectionery.address.model.DTO.AddressDTO;
+import app.confectionery.address.model.DTO.NewAddressDTO;
 import app.confectionery.address.service.AddressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/addresses")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class AddressController {
 
     private final AddressService addressService;
 
-    @GetMapping("/user/{userId}")   //OK
+    @GetMapping("/{userId}/addresses")
     public ResponseEntity<List<AddressDTO>> getAllUserAddresses(@PathVariable UUID userId) {
         List<AddressDTO> addresses = addressService.getAllAddressesByUserId(userId);
         return ResponseEntity.ok(addresses);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<AddressDTO> createAddress(@RequestBody NewAddressDTO newAddressDTO) {
-        Address address = addressService.addNewAddress(newAddressDTO);
+    @PostMapping("/{userId}/addresses")
+    public ResponseEntity<AddressDTO> createAddress(@PathVariable UUID userId, @RequestBody NewAddressDTO newAddressDTO) {
+        Address address = addressService.addNewAddress(userId, newAddressDTO);
         AddressDTO addressDTO = mapToDTO(address);
         return ResponseEntity.ok(addressDTO);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<AddressDTO> updateAddress(@PathVariable Integer id, @Valid @RequestBody NewAddressDTO newAddressDTO) {
-        AddressDTO updatedAddress = addressService.updateAddress(id, newAddressDTO);
+    @PutMapping("/{userId}/addresses/{id}")
+    public ResponseEntity<AddressDTO> updateAddress(@PathVariable UUID userId, @PathVariable Integer id, @Valid @RequestBody NewAddressDTO newAddressDTO) {
+        AddressDTO updatedAddress = addressService.updateAddress(userId, id, newAddressDTO);
         return ResponseEntity.ok(updatedAddress);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteAddress(@PathVariable Integer id) {
-        addressService.deleteAddress(id);
+    @DeleteMapping("/{userId}/addresses/{id}")
+    public ResponseEntity<Void> deleteAddress(@PathVariable UUID userId, @PathVariable Integer id) {
+        addressService.deleteAddress(userId, id);
         return ResponseEntity.ok().build();
     }
 

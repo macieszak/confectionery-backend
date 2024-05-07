@@ -11,23 +11,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequest orderRequest) {
+    @PostMapping("/{userId}/orders")
+    public ResponseEntity<?> createOrder(@PathVariable UUID userId, @RequestBody OrderRequest orderRequest) {
         try {
-            if (orderRequest.getUserId() == null || orderRequest.getAddressId() == null || orderRequest.getCartItemIds().isEmpty()) {
+            if (orderRequest.getAddressId() == null || orderRequest.getCartItemIds().isEmpty()) {
                 return ResponseEntity.badRequest().body("Invalid order request data.");
             }
 
             Order order = orderService.createOrder(
-                    orderRequest.getUserId(),
+                    userId,
                     orderRequest.getAddressId(),
                     orderRequest.getCartItemIds()
             );
@@ -39,7 +38,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/{userId}/orders")
     public ResponseEntity<?> getUserOrders(@PathVariable UUID userId) {
         try {
             List<OrderDTO> orders = orderService.getUserOrders(userId);
@@ -48,6 +47,5 @@ public class OrderController {
             return ResponseEntity.badRequest().body("Error retrieving orders: " + e.getMessage());
         }
     }
-
 
 }

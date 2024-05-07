@@ -10,7 +10,6 @@ import app.confectionery.order.model.DTO.OrderDTO;
 import app.confectionery.order.model.DTO.OrderDetailsDTO;
 import app.confectionery.order.model.Order;
 import app.confectionery.order.model.OrderStatus;
-import app.confectionery.order.model.StatusUpdateRequest;
 import app.confectionery.order.repository.OrderRepository;
 import app.confectionery.user.model.User;
 import app.confectionery.user.repository.UserRepository;
@@ -31,9 +30,9 @@ public class OrderServiceImpl implements OrderService {
 
     private static final BigDecimal SHIPPING_COST = new BigDecimal("5.00");
 
+    private final TransactionService transactionService;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final TransactionService transactionService;
     private final CartItemRepository cartItemRepository;
     private final AddressRepository addressRepository;
     private final ShoppingCartRepository shoppingCartRepository;
@@ -93,38 +92,6 @@ public class OrderServiceImpl implements OrderService {
         return savedOrder;
     }
 
-
-    public List<OrderDetailsDTO> getOrdersByUserId(UUID userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
-        return orders.stream()
-                .map(order -> new OrderDetailsDTO(
-                        order.getId(),
-                        order.getUser().getFirstName(),
-                        order.getUser().getLastName(),
-                        order.getUser().getEmail(),
-                        order.getOrderDate(),
-                        order.getTotalPrice(),
-                        order.getStatus().name()
-                ))
-                .collect(Collectors.toList());
-    }
-
-
-    private void clearShoppingCart(ShoppingCart cart) {
-        cart.setTotalPrice(0.0);
-        cart.setTotalItems(0);
-        cart.setCartItems(new ArrayList<>());
-        shoppingCartRepository.save(cart);
-    }
-
-    private BigDecimal calculateTotalPrice(List<Long> cartItemIds) {
-        return cartItemRepository.findAllById(cartItemIds).stream()
-                .map(item -> BigDecimal.valueOf(item.getUnitPrice()).multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .add(SHIPPING_COST);
-    }
-
-
     @Override
     public List<OrderDetailsDTO> getAllOrders() {
         return orderRepository.findAll().stream()
@@ -155,5 +122,37 @@ public class OrderServiceImpl implements OrderService {
                 order.getStatus().name());
     }
 
+    @Override
+    public List<OrderDetailsDTO> getOrdersByUserId(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream()
+                .map(order -> new OrderDetailsDTO(
+                        order.getId(),
+                        order.getUser().getFirstName(),
+                        order.getUser().getLastName(),
+                        order.getUser().getEmail(),
+                        order.getOrderDate(),
+                        order.getTotalPrice(),
+                        order.getStatus().name()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private BigDecimal calculateTotalPrice(List<Long> cartItemIds) {
+        return cartItemRepository.findAllById(cartItemIds).stream()
+                .map(item -> BigDecimal.valueOf(item.getUnitPrice()).multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .add(SHIPPING_COST);
+    }
+
+    private void clearShoppingCart(ShoppingCart cart) {
+        cart.setTotalPrice(0.0);
+        cart.setTotalItems(0);
+        cart.setCartItems(new ArrayList<>());
+        shoppingCartRepository.save(cart);
+    }
 
 }

@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import static app.confectionery.user.model.Permission.*;
 
-
 @Getter
 @RequiredArgsConstructor
 public enum Role {
@@ -27,9 +26,7 @@ public enum Role {
                     MEMBER_READ,
                     MEMBER_CREATE
             )
-    )
-
-    ;
+    );
 
     private final Set<Permission> permissions;
 
@@ -41,4 +38,5 @@ public enum Role {
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
         return authorities;
     }
+
 }

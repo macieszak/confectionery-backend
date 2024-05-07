@@ -1,11 +1,9 @@
 package app.confectionery.product.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
-
 
 @Entity
 @Table(name = "product")

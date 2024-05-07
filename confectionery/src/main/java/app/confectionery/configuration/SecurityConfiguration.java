@@ -40,14 +40,10 @@ public class SecurityConfiguration {
                         req
                                 .requestMatchers("api/auth/**")
                                 .permitAll()
-                                .requestMatchers("/api/user/products/**")
+                                .requestMatchers("/api/products/**")
                                 .permitAll()
-                                .requestMatchers("/api/user/**").hasAnyRole(ADMIN.name(), MEMBER.name())
-                                .requestMatchers("/api/addresses/*").hasAnyRole(ADMIN.name(), MEMBER.name())
+                                .requestMatchers("/api/users/**").hasAnyRole(ADMIN.name(), MEMBER.name())
                                 .requestMatchers("/api/admin/products/**").hasAnyRole(ADMIN.name())
-                                .requestMatchers("/api/wallet/**").hasAnyRole(ADMIN.name(), MEMBER.name())
-                                .requestMatchers("/api/cart/**").hasAnyRole(ADMIN.name(), MEMBER.name())
-                                .requestMatchers("/api/orders/**").hasAnyRole(ADMIN.name(), MEMBER.name())
                                 .requestMatchers("/api/admin/users/**").hasAnyRole(ADMIN.name())
                                 .requestMatchers("/api/admin/orders/**").hasAnyRole(ADMIN.name())
                                 .anyRequest()
@@ -70,4 +66,5 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }

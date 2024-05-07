@@ -1,6 +1,5 @@
-package app.confectionery.address.model;
+package app.confectionery.address.model.DTO;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +11,10 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NewAddressDTO {
+public class AddressDTO {
 
-    @NotBlank(message = "Address cannot be empty")
+    private Integer id;
     private String address;
-
     private UUID userId;
 
 }

@@ -3,7 +3,7 @@ package app.confectionery.cart.service;
 import app.confectionery.cart.model.ShoppingCart;
 import app.confectionery.cart.repository.ShoppingCartRepository;
 import app.confectionery.cart_item.model.CartItem;
-import app.confectionery.cart_item.model.CartItemDTO;
+import app.confectionery.cart_item.model.DTO.CartItemDTO;
 import app.confectionery.cart_item.repository.CartItemRepository;
 import app.confectionery.product.model.Product;
 import app.confectionery.product.repository.ProductRepository;
@@ -36,8 +36,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     @Transactional
     public CartItem addProductToCart(UUID userId, Long productId, int quantity) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         ShoppingCart cart = user.getCart();
         if (cart == null) {
@@ -49,9 +48,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             throw new IllegalArgumentException("Product not found");
         }
 
-        Optional<CartItem> cartItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst();
+        Optional<CartItem> cartItem = cart.getCartItems().stream().filter(item -> item.getProduct().getId().equals(productId)).findFirst();
 
         if (cartItem.isEmpty()) {
             cartItem = Optional.of(new CartItem());
@@ -65,44 +62,35 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             existingItem.setQuantity(existingItem.getQuantity() + quantity);
         }
         updateCartTotal(cart);
+
         return cartItemRepository.save(cartItem.get());
     }
 
     @Override
     public int getCartItemCount(UUID userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         ShoppingCart cart = user.getCart();
         if (cart == null) {
             return 0;
         }
-        return cart.getCartItems().stream()
-                .mapToInt(CartItem::getQuantity)
-                .sum();
+
+        return cart.getCartItems().stream().mapToInt(CartItem::getQuantity).sum();
     }
 
     @Override
     public List<CartItemDTO> getCartItems(UUID userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         ShoppingCart cart = user.getCart();
         if (cart == null) {
             return new ArrayList<>();
         }
-        return cart.getCartItems().stream()
-                .map(item -> CartItemDTO.builder()
-                        .productId(item.getProduct().getId())
-                        .cartItemId(item.getId())
-                        .productName(item.getProduct().getName())
-                        .image(item.getProduct().getImage())
-                        .price(item.getUnitPrice())
-                        .quantity(item.getQuantity())
-                        .build())
-                .collect(Collectors.toList());
+
+        return cart.getCartItems().stream().map(item -> CartItemDTO.builder().productId(item.getProduct().getId()).cartItemId(item.getId()).productName(item.getProduct().getName()).image(item.getProduct().getImage()).price(item.getUnitPrice()).quantity(item.getQuantity()).build()).collect(Collectors.toList());
     }
 
     @Override
     public void incrementQuantity(UUID userId, Long productId) {
+
         CartItem cartItem = findCartItem(userId, productId);
         cartItem.setQuantity(cartItem.getQuantity() + 1);
         cartItemRepository.save(cartItem);
@@ -130,20 +118,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public CartItem findCartItem(UUID userId, Long productId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isEmpty()) {
+            throw new IllegalArgumentException("Product not found");
+        }
+
         ShoppingCart cart = user.getCart();
-        return cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Cart item not found"));
+
+        return cart.getCartItems().stream().filter(item -> item.getProduct().getId().equals(productId)).findFirst().orElseThrow(() -> new IllegalArgumentException("Cart item not found"));
     }
 
     @Override
     public void updateCartTotal(ShoppingCart cart) {
-        double totalPrice = cart.getCartItems().stream()
-                .mapToDouble(item -> item.getUnitPrice() * item.getQuantity())
-                .sum();
+        double totalPrice = cart.getCartItems().stream().mapToDouble(item -> item.getUnitPrice() * item.getQuantity()).sum();
 
         logger.debug("Updating cart total: " + totalPrice);
         cart.setTotalPrice(totalPrice);

@@ -21,24 +21,10 @@ import java.util.Optional;
 public class StorageServiceImpl implements StorageService {
 
     private static final Logger logger = LoggerFactory.getLogger(StorageServiceImpl.class);
-
     private final String FOLDER_PATH = "/Users/maciejmaksymiuk/confectionery project/confectionery_web_app_backend/confectionery/src/main/resources/static/product_images/";
+
     private final FileDataRepository fileDataRepository;
     private final ProductRepository productRepository;
-
-    @Override
-    public String uploadImageToFileSystem(MultipartFile file) throws IOException {
-        String filePath = FOLDER_PATH + file.getOriginalFilename();
-
-        FileData fileData = fileDataRepository.save(FileData.builder()
-                .name(file.getOriginalFilename())
-                .type(file.getContentType())
-                .filePath(filePath).build());
-
-        file.transferTo(new File(filePath));
-
-        return "file uploaded successfully : " + filePath;
-    }
 
     @Override
     public FileData uploadImageToFileSystemAndReturnFileData(MultipartFile file) throws IOException {
@@ -66,10 +52,7 @@ public class StorageServiceImpl implements StorageService {
         Optional<FileData> existingFileData = fileDataRepository.findByName(currentFileDataName);
 
         if (existingFileData.isPresent() && existingFileData.get().getName().equals(file.getOriginalFilename())) {
-            // The file is the same, no need to update or change
-            System.out.println("działa !!!!!!!!!!!!!!!!!!!!!");
             return existingFileData.get();
-
         }
 
         String filePath = FOLDER_PATH + file.getOriginalFilename();
@@ -82,9 +65,7 @@ public class StorageServiceImpl implements StorageService {
         file.transferTo(new File(filePath));
 
         return fileData;
-
     }
-
 
     @Override
     public byte[] downloadImageFromFileSystem(String fileName) throws IOException {

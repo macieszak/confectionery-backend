@@ -33,7 +33,6 @@ public class Order {
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    //@JoinColumn(name = "address_id", nullable = false)
     @JoinColumn(name = "address_id")
     private Address deliveryAddress;
 

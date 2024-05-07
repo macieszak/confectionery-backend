@@ -1,6 +1,7 @@
 package app.confectionery.product.repository;
 
 import app.confectionery.product.model.Product;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByPriceBetween(double minPrice, double maxPrice);
 
     List<Product> findByNameContainingIgnoreCase(String name);
+
+    List<Product> findAll(Sort sort);
 
 }

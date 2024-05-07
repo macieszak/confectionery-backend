@@ -1,10 +1,10 @@
 package app.confectionery.user.model;
 
-
 import app.confectionery.address.model.Address;
 import app.confectionery.cart.model.ShoppingCart;
 import app.confectionery.order.model.Order;
 import app.confectionery.wallet.model.Transaction;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -48,6 +48,7 @@ public class User implements UserDetails {
     private BigDecimal balance = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
     @ToString.Exclude
     private List<Transaction> transactions;
 
@@ -91,4 +92,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

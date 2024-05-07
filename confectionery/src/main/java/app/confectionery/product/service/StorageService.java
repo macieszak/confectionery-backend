@@ -7,12 +7,10 @@ import java.io.IOException;
 
 public interface StorageService {
 
-    String uploadImageToFileSystem(MultipartFile file) throws IOException;
-
     FileData uploadImageToFileSystemAndReturnFileData(MultipartFile file) throws IOException;
 
-    byte[] downloadImageFromFileSystem(String fileName) throws IOException;
-
     FileData uploadImageToFileSystemAndReturnFileData(MultipartFile file, Long productId) throws IOException;
+
+    byte[] downloadImageFromFileSystem(String fileName) throws IOException;
 
 }

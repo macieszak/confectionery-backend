@@ -3,7 +3,6 @@ package app.confectionery.authorization.controller;
 import app.confectionery.authorization.model.request.AuthenticationRequest;
 import app.confectionery.authorization.model.response.AuthenticationResponse;
 import app.confectionery.authorization.service.AuthorizationService;
-import app.confectionery.authorization.service.AuthorizationServiceImpl;
 import app.confectionery.authorization.model.request.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ public class AuthorizationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         AuthenticationResponse authenticationResponse = authorizationService.register(registerRequest);
-
         return ResponseEntity.ok(authenticationResponse);
     }
 
@@ -31,6 +29,5 @@ public class AuthorizationController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(authorizationService.authenticate(authenticationRequest));
     }
-
 
 }

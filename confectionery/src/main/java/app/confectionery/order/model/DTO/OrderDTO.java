@@ -27,7 +27,6 @@ public class OrderDTO {
     private String status;
     private LocalDateTime orderDate;
 
-
     public OrderDTO(Order order) {
         this.orderId = order.getId();
         this.addressDetails = order.getDeliveryAddress().getAddressName();
@@ -38,20 +37,28 @@ public class OrderDTO {
         this.status = order.getStatus().name();
         this.orderDate = order.getOrderDate();
     }
+
 }
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 class ProductDTO {
+
     private Long productId;
     private String name;
     private int quantity;
 
     public ProductDTO(Product product, int quantity) {
-        this.productId = product.getId();
-        this.name = product.getName();
+        if (product != null) {
+            this.productId = product.getId();
+            this.name = product.getName();
+        } else {
+            this.productId = null;
+            this.name = "Product Deleted";
+        }
         this.quantity = quantity;
     }
+
 }
 

@@ -1,13 +1,10 @@
 package app.confectionery.user.controller;
 
 import app.confectionery.order.model.DTO.OrderDetailsDTO;
-import app.confectionery.order.model.StatusUpdateRequest;
-import app.confectionery.order.repository.OrderRepository;
 import app.confectionery.order.service.OrderService;
 import app.confectionery.user.model.AccountStatus;
-import app.confectionery.user.model.User;
-import app.confectionery.user.model.UserStatusUpdateRequest;
-import app.confectionery.user.model.UserSummaryDTO;
+import app.confectionery.user.model.DTO.UserStatusUpdateRequest;
+import app.confectionery.user.model.DTO.UserSummaryDTO;
 import app.confectionery.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +20,8 @@ public class AdminUserController {
 
     private final UserService userService;
     private final OrderService orderService;
-    private final OrderRepository orderRepository;
 
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<List<UserSummaryDTO>> getUserSummaries() {
         List<UserSummaryDTO> userSummaries = userService.getAllUserSummaries();
         return ResponseEntity.ok(userSummaries);

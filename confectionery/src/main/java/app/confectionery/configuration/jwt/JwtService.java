@@ -38,10 +38,10 @@ public class JwtService {
 
     private String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {
         Set<String> authoritiesSet = new HashSet<>();
-        for(GrantedAuthority authority: authorities) {
+        for (GrantedAuthority authority : authorities) {
             authoritiesSet.add(authority.getAuthority());
         }
-        //MEMBER, ADMIN
+
         return String.join(",", authoritiesSet);
     }
 

@@ -7,9 +7,10 @@ import java.util.UUID;
 
 public interface FavoriteService {
 
+    List<Product> getFavoritesByUserId(UUID userId);
+
     void addFavorite(UUID userId, Long favoriteProductId);
 
     void removeFavorite(UUID userId, Long productId);
 
-    List<Product> getFavoritesByUserId(UUID userId);
 }

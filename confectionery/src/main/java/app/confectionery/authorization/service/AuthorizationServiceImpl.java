@@ -24,17 +24,15 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class AuthorizationServiceImpl implements AuthorizationService {
 
-    private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-
+    private final UserRepository userRepository;
     private final ShoppingCartRepository shoppingCartRepository;
 
 
     @Override
     public AuthenticationResponse register(RegisterRequest registerRequest) {
-
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             throw new IllegalStateException("Email already in use. Please use a different email.");
         }
@@ -77,17 +75,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        //FirstStep
-        //We need to validate our request (validate whether password & username is correct)
-        //Verify whether user present in the database
-        //Which AuthenticationProvider -> DaoAuthenticationProvider (Inject)
-        //We need to authenticate using authenticationManager injecting this authenticationProvider
-        //SecondStep
-        //Verify whether userName and password is correct => UserNamePasswordAuthenticationToken
-        //Verify whether user present in db
-        //generateToken
-        //Return the token
-
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -110,7 +97,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                     .id(user.getId())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
-                    .phoneNumber(user.getPhoneNumber()) //null
+                    .phoneNumber(user.getPhoneNumber())
                     .email(user.getEmail())
                     .role(user.getRole().name())
                     .build();
@@ -118,7 +105,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         } catch (AuthenticationException ex) {
             throw new CustomAuthenticationException("Invalid email/password combination.");
         }
-
     }
 
 }

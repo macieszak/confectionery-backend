@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDetailsDTO {
+
     private Long orderId;
     private String firstName;
     private String lastName;
@@ -18,4 +19,5 @@ public class OrderDetailsDTO {
     private LocalDateTime orderDate;
     private BigDecimal totalAmount;
     private String status;
+
 }
