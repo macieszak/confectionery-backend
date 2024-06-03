@@ -13,20 +13,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
-
     @JsonProperty("access_token")
     private String accessToken;
-
     private UUID id;
-
     private String firstName;
-
     private String lastName;
-
     private String phoneNumber;
-
     private String email;
-
     private String role;
-
 }

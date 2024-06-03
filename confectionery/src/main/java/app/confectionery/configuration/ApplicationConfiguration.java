@@ -1,6 +1,6 @@
 package app.confectionery.configuration;
 
-import app.confectionery.user.repository.UserRepository;
+import app.confectionery.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

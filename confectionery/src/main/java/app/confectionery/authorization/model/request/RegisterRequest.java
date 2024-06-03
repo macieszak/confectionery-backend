@@ -1,6 +1,6 @@
 package app.confectionery.authorization.model.request;
 
-import app.confectionery.user.model.Role;
+import app.confectionery.modules.user.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

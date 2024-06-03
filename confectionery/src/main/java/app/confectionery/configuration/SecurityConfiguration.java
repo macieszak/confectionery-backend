@@ -18,8 +18,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-import static app.confectionery.user.model.Role.ADMIN;
-import static app.confectionery.user.model.Role.MEMBER;
+import static app.confectionery.modules.user.model.Role.ADMIN;
+import static app.confectionery.modules.user.model.Role.MEMBER;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -27,7 +27,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfiguration {
-
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthFilter jwtAuthFilter;
 
@@ -43,9 +42,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/products/**")
                                 .permitAll()
                                 .requestMatchers("/api/users/**").hasAnyRole(ADMIN.name(), MEMBER.name())
-                                .requestMatchers("/api/admin/products/**").hasAnyRole(ADMIN.name())
-                                .requestMatchers("/api/admin/users/**").hasAnyRole(ADMIN.name())
-                                .requestMatchers("/api/admin/orders/**").hasAnyRole(ADMIN.name())
+                                .requestMatchers("api/admin/**").hasRole(ADMIN.name())
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
@@ -66,5 +63,4 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }
