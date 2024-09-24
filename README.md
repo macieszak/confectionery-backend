@@ -62,15 +62,3 @@ Poniższy diagram przedstawia globalną architekturę aplikacji sklepu interneto
 
 ### Zakładka 'Orders' administratora
 ![image](https://github.com/user-attachments/assets/913da5d2-2ab8-487e-ae02-c04cbd5549c5)
-
-
-
-
-
-
-
-
-
-
-
-
