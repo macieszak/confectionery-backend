@@ -9,12 +9,12 @@ Poniższy diagram przedstawia globalną architekturę aplikacji sklepu interneto
 ![image](https://github.com/user-attachments/assets/67bc53d2-f423-4e17-b286-a954d30d34dd)
 
 ## Najważniejsze funkcjonalności aplikacji
-• Możliwość przeglądania i filtrowania produktów według różnych kryteriów.
-• Funkcjonalność logowania i rejestracji użytkowników z autoryzacją przy użyciu tokenów JWT.
-• Dodawanie produktów do koszyka i listy ulubionych, z odpowiednim zarządzaniem sesją użytkownika.
-• Dynamiczne zarządzanie stanem aplikacji oraz intuicyjna nawigacja, zapewniające płynne doświadczenie użytkownika.
-• Profil użytkownika, który umożliwia zarządzanie danymi osobowymi, adresami oraz zamówieniami. Użytkownik może przeglądać historię swoich zamówień, edytować dane kontaktowe i dodawać nowe adresy dostawy.
-• Panel administratora, który umożliwia dodawanie nowych produktów, edycję oraz usuwanie istniejących produktów. Administrator ma również możliwość zarządzania użytkownikami poprzez zmianę statusów ich kont oraz zarządzanie zamówieniami.
+- Możliwość przeglądania i filtrowania produktów według różnych kryteriów.
+- Funkcjonalność logowania i rejestracji użytkowników z autoryzacją przy użyciu tokenów JWT.
+- Dodawanie produktów do koszyka i listy ulubionych, z odpowiednim zarządzaniem sesją użytkownika.
+- Dynamiczne zarządzanie stanem aplikacji oraz intuicyjna nawigacja, zapewniające płynne doświadczenie użytkownika.
+- Profil użytkownika, który umożliwia zarządzanie danymi osobowymi, adresami oraz zamówieniami. Użytkownik może przeglądać historię swoich zamówień, edytować dane kontaktowe i dodawać nowe adresy dostawy.
+- Panel administratora, który umożliwia dodawanie nowych produktów, edycję oraz usuwanie istniejących produktów. Administrator ma również możliwość zarządzania użytkownikami poprzez zmianę statusów ich kont oraz zarządzanie zamówieniami.
 
 ## Interefjsy aplikacji
 ### Zakładka 'Home'
