@@ -16,7 +16,7 @@ Poniższy diagram przedstawia globalną architekturę aplikacji sklepu interneto
 - Profil użytkownika, który umożliwia zarządzanie danymi osobowymi, adresami oraz zamówieniami. Użytkownik może przeglądać historię swoich zamówień, edytować dane kontaktowe i dodawać nowe adresy dostawy.
 - Panel administratora, który umożliwia dodawanie nowych produktów, edycję oraz usuwanie istniejących produktów. Administrator ma również możliwość zarządzania użytkownikami poprzez zmianę statusów ich kont oraz zarządzanie zamówieniami.
 
-## Interefjsy aplikacji
+## Interfejsy aplikacji
 ### Zakładka 'Home'
 ![image](https://github.com/user-attachments/assets/647d126f-ce6c-421f-b395-c99e437783e4)
 ![image](https://github.com/user-attachments/assets/97e69fb5-7fc6-47dc-941c-b826a6aa10d7)
@@ -28,7 +28,7 @@ Poniższy diagram przedstawia globalną architekturę aplikacji sklepu interneto
 ![image](https://github.com/user-attachments/assets/3a61e0b8-6a4f-49d2-930b-9e8b15d70520)
 ![image](https://github.com/user-attachments/assets/db499769-1ead-44a9-994a-8e2243a4d062)
 
-### Zakładka inforamcji o profilu użytkownika
+### Zakładka informacji o profilu użytkownika
 ![image](https://github.com/user-attachments/assets/4d4332d3-777b-4e23-938b-bc0b21c7eb4b)
 
 ### Zakładka 'Wallet'
